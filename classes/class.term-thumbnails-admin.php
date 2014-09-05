@@ -226,7 +226,7 @@ class Term_Thumbnails_Admin
 			<td>
 
 				<?php if ( has_term_thumbnail( $term_id ) ) : ?>
-					<p class="term-thumbnail">'
+					<p class="term-thumbnail">
 						<?php echo get_term_thumbnail( $term_id, 'thumbnail' ) ?>
 					</p>
 				<?php endif; ?>
