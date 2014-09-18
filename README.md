@@ -50,6 +50,10 @@ For removing support for categories put this in your functions.php
 
 ## Changelog
 
+### v1.0.2
+
+* Fix: No term images for custom taxonomies
+
 ### v1.0.1
 
 * Added: Screenshots

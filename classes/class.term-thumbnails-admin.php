@@ -35,8 +35,7 @@ class Term_Thumbnails_Admin
 	public function __construct()
 	{
 
-		$this->register_tax_hooks();
-
+		add_action( 'wp_loaded', array( $this, 'register_tax_hooks' ) );
 		add_action( 'admin_print_scripts-edit-tags.php', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'delete_term', array( $this, 'delete_term' ), 10, 4 );
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
@@ -101,6 +100,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Display term image
 	 *
+	 * @access public
 	 * @author Ralf Hortt
 	 * @since 1.0.0
 	 **/
@@ -116,6 +116,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Display term image
 	 *
+	 * @access public
 	 * @author Ralf Hortt
 	 * @since 1.0.0
 	 **/
@@ -131,6 +132,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Set term image
 	 *
+	 * @access public
 	 * @author Ralf Hortt
 	 * @since 1.0.0
 	 **/
@@ -165,6 +167,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Cleanup after term is deleted
 	 *
+	 * @access public
 	 * @return void
 	 * @author Ralf Hortt
 	 * @since 1.0.0
@@ -181,6 +184,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Delete term thumbnail
 	 *
+	 * @access protected
 	 * @param int $term_id Term ID
 	 * @param int $attachment_id Attachment ID
 	 * @author Ralf Hortt
@@ -338,6 +342,7 @@ class Term_Thumbnails_Admin
 	/**
 	 * Set term thumbnail
 	 *
+	 * @access protected
 	 * @param int $term_id Term ID
 	 * @param int $attachment_id Attachment ID
 	 * @author Ralf Hortt
@@ -363,20 +368,16 @@ class Term_Thumbnails_Admin
 	/**
 	 * Register hooks
 	 *
+	 * @access public
 	 * @author Ralf Hortt
 	 * @since  1.0.0
 	 **/
-	protected function register_tax_hooks()
+	public function register_tax_hooks()
 	{
 
-		global $wp_taxonomies;
+		$taxonomies = apply_filters( 'term-thumbnail-taxonomies', get_taxonomies() );
 
-		if ( !$wp_taxonomies )
-			return;
-
-		$taxonomies = apply_filters( 'term-thumbnail-taxonomies', array_keys( $wp_taxonomies ) );
-
-		foreach ( $wp_taxonomies as $taxonomy => $settings ) :
+		foreach ( $taxonomies as $taxonomy ) :
 
 			if ( FALSE === apply_filters( $taxonomy . '-has-thumbnails', TRUE ) )
 				continue;
