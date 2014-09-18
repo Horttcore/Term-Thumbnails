@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypa
 Tags: post thumbnail, thumbnail, term, taxonomy, feature image, image
 Requires at least: 3.7
 Tested up to: 4.0
-Stable tag: trunk
+Stable tag: 1.0.2
 License: GPLv2
 License URI: http://www.opensource.org/licenses/GPL-2.0
 
