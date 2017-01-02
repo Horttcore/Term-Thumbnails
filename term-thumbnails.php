@@ -3,7 +3,7 @@
 Plugin Name: Term Thumbnails
 Plugin URI: http://horttcore.de
 Description: Post Thumbnails for Terms
-Version: 1.0.2
+Version: 2.0.0
 Author: Ralf Hortt
 Author URI: http://horttcore.de
 License: GPL2

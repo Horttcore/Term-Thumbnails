@@ -14,14 +14,11 @@ if ( !function_exists( 'add_action' ) ) {
  * @return int/bool Attachment ID or FALSE
  * @since 0.0
  */
-function get_term_thumbnail_id( $term_id = null ) {
+function get_term_thumbnail_id( $term_id = null )
+{
 
-	$thumbnails = get_option( 'term-thumbnails' );
-
-	if  ( isset( $thumbnails[$term_id] ) )
-		return $thumbnails[$term_id];
-	else
-		return FALSE;
+	$thumbnail_id = get_term_meta( $term_id, '_thumbnail_id', TRUE );
+	return ( $thumbnail_id ) ? $thumbnail_id : FALSE;
 
 } // end get_post_thumbnail_id
 
@@ -37,12 +34,9 @@ function get_term_thumbnail_id( $term_id = null ) {
 function has_term_thumbnail( $term_id = '')
 {
 
-	$thumbnails = get_option( 'term-thumbnails' );
+	$thumbnail_id = get_term_thumbnail_id( $term_id );
 
-	if  ( isset( $thumbnails[$term_id] ) )
-		return TRUE;
-	else
-		return FALSE;
+	return ( FALSE !== $thumbnail_id ) ? TRUE : FALSE;
 
 } // end has_term_thumbnail
 

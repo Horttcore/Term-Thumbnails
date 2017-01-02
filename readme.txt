@@ -54,6 +54,10 @@ For removing support for categories put this in your functions.php
 
 == Changelog ==
 
+= v2.0.0 =
+
+* Switch from options to term meta structure
+
 = v1.0.2 =
 
 * Fix: No term images for custom taxonomies

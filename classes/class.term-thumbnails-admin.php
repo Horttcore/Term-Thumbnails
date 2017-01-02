@@ -20,7 +20,7 @@ class Term_Thumbnails_Admin
 	 *
 	 * @var string
 	 **/
-	protected $version = '1.0.0';
+	protected $version = '2.0.0';
 
 
 
@@ -43,7 +43,7 @@ class Term_Thumbnails_Admin
 		add_action( 'wp_ajax_get-term-thumbnail', array( $this, 'ajax_get_term_thumbnail' ) );
 		add_action( 'wp_ajax_set-term-thumbnail', array( $this, 'ajax_set_term_thumbnail' ) );
 
-	} // end __construct
+	} // END __construct
 
 
 
@@ -60,7 +60,7 @@ class Term_Thumbnails_Admin
 		wp_register_script( 'term-thumbnails', plugins_url( '../javascript/term-thumbnails.js', __FILE__ ), array(), $this->version, TRUE );
 		wp_enqueue_script( 'term-thumbnails' );
 
-	} // end admin_enqueue_scripts
+	} // END admin_enqueue_scripts
 
 
 
@@ -93,7 +93,7 @@ class Term_Thumbnails_Admin
 
 		<?php
 
-	} // end add_form_fields
+	} // END add_form_fields
 
 
 
@@ -109,7 +109,7 @@ class Term_Thumbnails_Admin
 
 		$this->delete_term_thumbnail( $_REQUEST['term_id'] );
 
-	} // end ajax_get_term_thumbnail
+	} // END ajax_get_term_thumbnail
 
 
 
@@ -125,7 +125,7 @@ class Term_Thumbnails_Admin
 
 		die( '<p class="term-thumbnail">' . wp_get_attachment_image( $_REQUEST['attachment_id'], 'thumbnail' ) . '</p>' );
 
-	} // end ajax_get_term_thumbnail
+	} // END ajax_get_term_thumbnail
 
 
 
@@ -142,7 +142,7 @@ class Term_Thumbnails_Admin
 		$this->set_term_thumbnail( $_REQUEST['term_id'], $_REQUEST['attachment_id'] );
 		die( '<p class="term-thumbnail">' . wp_get_attachment_image( $_REQUEST['attachment_id'], 'thumbnail' ) . '</p>' );
 
-	} // end ajax_get_term_thumbnail
+	} // END ajax_get_term_thumbnail
 
 
 
@@ -160,7 +160,7 @@ class Term_Thumbnails_Admin
 
 		$this->set_term_thumbnail( $term_id, $_POST['term-thumbnail-id'] );
 
-	} // end created_term_thumbnail
+	} // END created_term_thumbnail
 
 
 
@@ -177,7 +177,7 @@ class Term_Thumbnails_Admin
 
 		$this->delete_term_thumbnail( $term );
 
-	} // end delete_term
+	} // END delete_term
 
 
 
@@ -198,11 +198,9 @@ class Term_Thumbnails_Admin
 		if ( 0 == $term_id )
 			return;
 
-		$options = get_option( 'term-thumbnails' );
-		unset( $options[$term_id] );
-		update_option( 'term-thumbnails', $options );
+		delete_term_meta( $term_id, '_thumbnail_id' );
 
-	} // end delete_term_thumbnail
+	} // END delete_term_thumbnail
 
 
 
@@ -244,7 +242,7 @@ class Term_Thumbnails_Admin
 
 		<?php
 
-	} // end edit_form_fields
+	} // END edit_form_fields
 
 
 
@@ -262,7 +260,7 @@ class Term_Thumbnails_Admin
 		else
 			$this->set_term_thumbnail( $_POST['tag_ID'], $_POST['term-thumbnail-id'] );
 
-	} // end edit term
+	} // END edit term
 
 
 
@@ -277,7 +275,7 @@ class Term_Thumbnails_Admin
 
 		load_plugin_textdomain( 'term-thumbnails', false, dirname( plugin_basename( __FILE__ ) ) . '/../languages/' );
 
-	} // end load_plugin_textdomain
+	} // END load_plugin_textdomain
 
 
 
@@ -296,7 +294,7 @@ class Term_Thumbnails_Admin
 		$columns['thumbnail'] = __( 'Thumbnail' );
 		return $columns;
 
-	} // end manage_edit_taxonomy_custom_column
+	} // END manage_edit_taxonomy_custom_column
 
 
 
@@ -321,7 +319,6 @@ class Term_Thumbnails_Admin
 
 			case 'thumbnail':
 
-
 				echo get_term_thumbnail( $term_id, 'thumbnail', array( 'class' => 'term-thumbnail' ) );
 
 				?>
@@ -335,7 +332,7 @@ class Term_Thumbnails_Admin
 
 		endswitch;
 
-	} // end manage_taxonomy_custom_column
+	} // END manage_taxonomy_custom_column
 
 
 
@@ -351,17 +348,15 @@ class Term_Thumbnails_Admin
 	protected function set_term_thumbnail( $term_id, $attachment_id )
 	{
 
-		$term_id = intval( $term_id );
-		$attachment_id = intval( $attachment_id );
+		$term_id = absint( $term_id );
+		$attachment_id = absint( $attachment_id );
 
 		if ( 0 == $term_id || 0 == $attachment_id )
 			return;
 
-		$options = get_option( 'term-thumbnails' );
-		$options[$term_id] = $attachment_id;
-		update_option( 'term-thumbnails', $options );
+		update_term_meta( $term_id, '_thumbnail_id', $attachment_id );
 
-	} // end set_term_thumbnail
+	} // END set_term_thumbnail
 
 
 
@@ -391,7 +386,7 @@ class Term_Thumbnails_Admin
 
 		endforeach;
 
-	} // end register_tax_hooks
+	} // END register_tax_hooks
 
 
 
