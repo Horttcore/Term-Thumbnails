@@ -158,6 +158,9 @@ class Term_Thumbnails_Admin
 	public function created_term_thumbnail( $term_id = FALSE, $tt_id = FALSE )
 	{
 
+		if ( !isset( $_POST['term-thumbnail-id'] ) || '' == $_POST['term-thumbnail-id'] )
+			return;
+
 		$this->set_term_thumbnail( $term_id, $_POST['term-thumbnail-id'] );
 
 	} // END created_term_thumbnail
@@ -255,6 +258,10 @@ class Term_Thumbnails_Admin
 	 **/
 	public function edit_term()
 	{
+
+		if ( !isset( $_POST['term-thumbnail-id'] ) )
+			return;
+
 		if ( isset( $_POST['term-thumbnail-id'] ) && '' == $_POST['term-thumbnail-id'] )
 			$this->delete_term_thumbnail( $_POST['tag_ID'] );
 		else

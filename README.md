@@ -10,16 +10,16 @@ Post Thumbnails for WordPress Terms
 
 ## Screenshots
 
-### Term listing 
-[![Term listing](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-1.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-1.png) 
- 
-### Term listing with image 
-[![Term listing with image](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-2.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-2.png) 
- 
-### Term edit page 
+### Term listing
+[![Term listing](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-1.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-1.png)
+
+### Term listing with image
+[![Term listing with image](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-2.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-2.png)
+
+### Term edit page
 [![Term edit page](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-3.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-3.png)
- 
-### Term edit page with image 
+
+### Term edit page with image
 [![Term edit page with image](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-4.png)](https://raw.github.com/Horttcore/Term-Thumbnails/master/screenshot-4.png)
 
 ## Language Support
@@ -49,6 +49,10 @@ For removing support for categories put this in your functions.php
 * `$taxonomy-has-thumbnails` - Remove term thumbnail support for taxonomy; expects bool value
 
 ## Changelog
+
+### v2.0.1
+
+* Fix: Remove warning
 
 ### v2.0.0
 
