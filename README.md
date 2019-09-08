@@ -50,6 +50,10 @@ For removing support for categories put this in your functions.php
 
 ## Changelog
 
+### v2.1.0
+
+* Added: Composer support
+
 ### v2.0.1
 
 * Fix: Remove warning
