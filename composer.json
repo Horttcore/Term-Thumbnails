@@ -1,0 +1,13 @@
+{
+    "name": "ralfhortt/term-thumbnails",
+    "description": "Post Thumbnails for WordPress Terms",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Ralf Hortt",
+            "email": "me@horttcore.de"
+        }
+    ],
+    "require": {}
+}
