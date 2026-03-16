@@ -9,5 +9,30 @@
             "email": "me@horttcore.de"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.0",
+        "brain/monkey": "^2.6",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "RalfHortt\\TermThumbnails\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RalfHortt\\TermThumbnails\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "pest"
+    }
 }

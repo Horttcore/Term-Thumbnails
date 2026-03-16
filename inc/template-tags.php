@@ -1,88 +1,75 @@
 <?php
 
-// Make sure we don't expose any info if called directly
-if (!function_exists('add_action')) {
-    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+declare(strict_types=1);
+
+// Make sure we don't expose any info if called directly.
+if (! function_exists('add_action')) {
     exit;
 }
 
 /**
- * Retrieve Term Thumbnail ID.
+ * Retrieve the attachment ID for a term's thumbnail.
  *
- * @param int $term_id Optional. Term ID.
- *
- * @return int/bool Attachment ID or FALSE
- *
- * @since 0.0
+ * @param int $term_id Term ID.
+ * @return int|false Attachment ID or false if not set.
  */
-function get_term_thumbnail_id($term_id = null)
+function get_term_thumbnail_id(int $term_id = 0): int|false
 {
     $thumbnail_id = get_term_meta($term_id, '_thumbnail_id', true);
 
-    return ($thumbnail_id) ? $thumbnail_id : false;
-} // end get_post_thumbnail_id
+    return $thumbnail_id ? (int) $thumbnail_id : false;
+}
 
 /**
- * Conditional tag.
+ * Check whether a term has a thumbnail set.
  *
- * @param int $term_id Term ID
- *
- * @return bool Term has thumbnail
- *
- * @author Ralf Hortt
- **/
-function has_term_thumbnail($term_id = '')
+ * @param int $term_id Term ID.
+ * @return bool
+ */
+function has_term_thumbnail(int $term_id = 0): bool
 {
-    $thumbnail_id = get_term_thumbnail_id($term_id);
-
-    return (false !== $thumbnail_id) ? true : false;
-} // end has_term_thumbnail
+    return false !== get_term_thumbnail_id($term_id);
+}
 
 /**
- * Display term thumbnail.
+ * Output the thumbnail image for the current term archive.
  *
- * @param string|array $size Optional. Image size. Defaults to 'post-thumbnail', which theme sets using set_post_thumbnail_size( $width, $height, $crop_flag );.
- * @param string|array $attr Optional. Query string or array of attributes.
- *
- * @author Ralf Hortt
- *
- * @since 1.0.0
- **/
-function the_term_thumbnail($size = 'post-thumbnail', $attr = '')
+ * @param string|int[]  $size Image size slug or [width, height] array. Default 'post-thumbnail'.
+ * @param string|array  $attr Optional. HTML attributes for the <img> tag.
+ */
+function the_term_thumbnail(string|array $size = 'post-thumbnail', string|array $attr = ''): void
 {
-    if (is_category()) :
-        $term_id = get_query_var('cat'); elseif (is_tag()) :
-        $term_id = get_query_var('tag'); elseif (is_tax()) :
-        $term_id = get_queried_object()->term_id;
-    endif;
+    if (is_category()) {
+        $term_id = (int) get_query_var('cat');
+    } elseif (is_tag()) {
+        $term_id = (int) get_queried_object_id();
+    } elseif (is_tax()) {
+        $term_id = (int) get_queried_object_id();
+    } else {
+        return;
+    }
 
-    echo get_term_thumbnail($term_id, $size, $attr);
-} // end the_term_thumbnail
+    echo get_term_thumbnail($term_id, $size, $attr); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
 
 /**
- * Get term thumbnail.
+ * Return the thumbnail <img> HTML for a term.
  *
- * @param int          $term_id Optional. Post ID.
- * @param string       $size    Optional. Image size. Defaults to 'post-thumbnail'.
- * @param string|array $attr    Optional. Query string or array of attributes.
- *
- * @return string HTML output
- *
- * @author Ralf Hortt
- *
- * @since 1.0.0
- **/
-function get_term_thumbnail($term_id = null, $size = 'post-thumbnail', $attr = '')
+ * @param int           $term_id Term ID.
+ * @param string|int[]  $size    Image size slug or [width, height] array. Default 'post-thumbnail'.
+ * @param string|array  $attr    Optional. HTML attributes for the <img> tag.
+ * @return string HTML <img> tag or empty string.
+ */
+function get_term_thumbnail(int $term_id = 0, string|array $size = 'post-thumbnail', string|array $attr = ''): string
 {
     $term_thumbnail_id = get_term_thumbnail_id($term_id);
 
+    /** @var string|int[] $size */
     $size = apply_filters('term_thumbnail_size', $size);
 
-    if ($term_thumbnail_id) {
-        $html = wp_get_attachment_image($term_thumbnail_id, $size, false, $attr);
-    } else {
-        $html = '';
-    }
+    $html = $term_thumbnail_id
+        ? wp_get_attachment_image($term_thumbnail_id, $size, false, $attr)
+        : '';
 
-    return apply_filters('term_thumbnail_html', $html, $term_id, $term_thumbnail_id, $size, $attr);
-} // end get_term_thumbnail
+    return (string) apply_filters('term_thumbnail_html', $html, $term_id, $term_thumbnail_id, $size, $attr);
+}

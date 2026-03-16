@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "term-thumbnails/term-thumbnail",
+	"version": "3.0.0",
+	"title": "Term Thumbnail",
+	"category": "theme",
+	"description": "Displays the thumbnail image for the current taxonomy term.",
+	"keywords": [ "term", "taxonomy", "thumbnail", "image", "featured" ],
+	"textdomain": "term-thumbnails",
+	"usesContext": [ "taxonomy", "termId" ],
+	"supports": {
+		"align": [ "wide", "full" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"__experimentalBorder": {
+			"radius": true
+		}
+	},
+	"editorScript": "file:./build/index.js",
+	"style": "file:./build/index.css"
+}
