@@ -9,7 +9,7 @@ final class Block
     public function register(): void
     {
         register_block_type(
-            plugin_dir_path(__FILE__) . '../block.json',
+            plugin_dir_path(__FILE__).'../block.json',
             [
                 'render_callback' => [$this, 'render'],
             ],
@@ -20,16 +20,16 @@ final class Block
     {
         $term_id = (int) ($block->context['termId'] ?? get_queried_object_id());
 
-        if (! $term_id || ! has_term_thumbnail($term_id)) {
+        if (!$term_id || !has_term_thumbnail($term_id)) {
             return '';
         }
 
-        $size_slug    = $attributes['sizeSlug'] ?? 'post-thumbnail';
+        $size_slug = $attributes['sizeSlug'] ?? 'post-thumbnail';
         $aspect_ratio = $attributes['aspectRatio'] ?? '';
-        $scale        = $attributes['scale'] ?? 'cover';
-        $width        = $attributes['width'] ?? '';
-        $height       = $attributes['height'] ?? '';
-        $focal_point  = $attributes['focalPoint'] ?? null;
+        $scale = $attributes['scale'] ?? 'cover';
+        $width = $attributes['width'] ?? '';
+        $height = $attributes['height'] ?? '';
+        $focal_point = $attributes['focalPoint'] ?? null;
 
         // Focal point is only applied when the image is cropped.
         $has_focal_point = $focal_point
@@ -41,23 +41,23 @@ final class Block
         $styles = [];
 
         if ($aspect_ratio) {
-            $styles[] = 'aspect-ratio:' . esc_attr($aspect_ratio);
-            $styles[] = 'object-fit:' . esc_attr($scale);
+            $styles[] = 'aspect-ratio:'.esc_attr($aspect_ratio);
+            $styles[] = 'object-fit:'.esc_attr($scale);
             $styles[] = 'height:100%';
         }
 
         if ($width) {
-            $styles[] = 'width:' . esc_attr($width);
+            $styles[] = 'width:'.esc_attr($width);
         }
 
         if ($height) {
-            $styles[] = 'height:' . esc_attr($height);
+            $styles[] = 'height:'.esc_attr($height);
         }
 
         if ($has_focal_point) {
             $x = round((float) $focal_point['x'] * 100);
             $y = round((float) $focal_point['y'] * 100);
-            $styles[] = 'object-position:' . $x . '% ' . $y . '%';
+            $styles[] = 'object-position:'.$x.'% '.$y.'%';
         }
 
         $img_attrs = [];

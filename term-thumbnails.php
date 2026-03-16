@@ -12,23 +12,23 @@
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       term-thumbnails
- * Domain Path:       /languages
+ * Domain Path:       /languages.
  */
 
 declare(strict_types=1);
 
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 // Composer autoloader.
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
+    require_once __DIR__.'/vendor/autoload.php';
 }
 
 // Public template tags (global functions — no autoloading, always available).
-require_once __DIR__ . '/inc/template-tags.php';
+require_once __DIR__.'/inc/template-tags.php';
 
 // Boot the plugin.
 if (class_exists(\RalfHortt\TermThumbnails\Plugin::class)) {

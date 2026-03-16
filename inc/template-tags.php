@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Make sure we don't expose any info if called directly.
-if (! function_exists('add_action')) {
+if (!function_exists('add_action')) {
     exit;
 }
 
@@ -11,6 +11,7 @@ if (! function_exists('add_action')) {
  * Retrieve the attachment ID for a term's thumbnail.
  *
  * @param int $term_id Term ID.
+ *
  * @return int|false Attachment ID or false if not set.
  */
 function get_term_thumbnail_id(int $term_id = 0): int|false
@@ -24,6 +25,7 @@ function get_term_thumbnail_id(int $term_id = 0): int|false
  * Check whether a term has a thumbnail set.
  *
  * @param int $term_id Term ID.
+ *
  * @return bool
  */
 function has_term_thumbnail(int $term_id = 0): bool
@@ -34,8 +36,8 @@ function has_term_thumbnail(int $term_id = 0): bool
 /**
  * Output the thumbnail image for the current term archive.
  *
- * @param string|int[]  $size Image size slug or [width, height] array. Default 'post-thumbnail'.
- * @param string|array  $attr Optional. HTML attributes for the <img> tag.
+ * @param string|int[] $size Image size slug or [width, height] array. Default 'post-thumbnail'.
+ * @param string|array $attr Optional. HTML attributes for the <img> tag.
  */
 function the_term_thumbnail(string|array $size = 'post-thumbnail', string|array $attr = ''): void
 {
@@ -55,9 +57,10 @@ function the_term_thumbnail(string|array $size = 'post-thumbnail', string|array 
 /**
  * Return the thumbnail <img> HTML for a term.
  *
- * @param int           $term_id Term ID.
- * @param string|int[]  $size    Image size slug or [width, height] array. Default 'post-thumbnail'.
- * @param string|array  $attr    Optional. HTML attributes for the <img> tag.
+ * @param int          $term_id Term ID.
+ * @param string|int[] $size    Image size slug or [width, height] array. Default 'post-thumbnail'.
+ * @param string|array $attr    Optional. HTML attributes for the <img> tag.
+ *
  * @return string HTML <img> tag or empty string.
  */
 function get_term_thumbnail(int $term_id = 0, string|array $size = 'post-thumbnail', string|array $attr = ''): string

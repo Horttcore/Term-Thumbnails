@@ -43,7 +43,7 @@ final class Plugin
         load_plugin_textdomain(
             'term-thumbnails',
             false,
-            dirname(plugin_basename(__FILE__)) . '/../languages/',
+            dirname(plugin_basename(__FILE__)).'/../languages/',
         );
     }
 }

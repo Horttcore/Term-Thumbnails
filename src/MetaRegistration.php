@@ -11,7 +11,7 @@ final class MetaRegistration
         $taxonomies = apply_filters('term-thumbnail-taxonomies', get_taxonomies());
 
         foreach ($taxonomies as $taxonomy) {
-            if (false === apply_filters($taxonomy . '-has-thumbnails', true)) {
+            if (false === apply_filters($taxonomy.'-has-thumbnails', true)) {
                 continue;
             }
 
