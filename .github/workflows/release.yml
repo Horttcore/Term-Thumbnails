@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
+      - name: Install Composer dependencies (no dev)
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Create release zip
+        run: |
+          SLUG="term-thumbnails"
+          VERSION="${GITHUB_REF_NAME}"
+          ZIP="${SLUG}-${VERSION}.zip"
+
+          zip -r "${ZIP}" . \
+            --exclude="*.git*" \
+            --exclude="*.github*" \
+            --exclude="node_modules/*" \
+            --exclude="tests/*" \
+            --exclude="src/index.js" \
+            --exclude="src/edit.js" \
+            --exclude="src/index.css" \
+            --exclude="src/block.json" \
+            --exclude="phpunit.xml" \
+            --exclude="package.json" \
+            --exclude="package-lock.json" \
+            --exclude="composer.json" \
+            --exclude="composer.lock" \
+            --exclude="*.DS_Store*"
+
+          echo "ZIP=${ZIP}" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: ${{ env.ZIP }}

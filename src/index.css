@@ -1,3 +1,27 @@
+/* Block figure: prevent image overflow and establish a stacking context */
+.wp-block-term-thumbnails-term-thumbnail {
+	overflow: hidden;
+}
+
+.wp-block-term-thumbnails-term-thumbnail img {
+	display: block;
+	max-width: 100%;
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	vertical-align: bottom;
+}
+
+/*
+ * When an aspect ratio is set the image fills the fixed-ratio container.
+ * object-fit and object-position are applied inline by the block.
+ */
+.wp-block-term-thumbnails-term-thumbnail img.has-aspect-ratio {
+	height: 100%;
+	object-fit: cover; /* fallback; overridden by inline style */
+}
+
+/* Admin term-list thumbnail preview */
 .term-thumbnail img {
 	max-width: 100%;
 	height: auto;
