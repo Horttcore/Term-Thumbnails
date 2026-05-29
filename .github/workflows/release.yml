@@ -46,8 +46,10 @@ jobs:
             --exclude="node_modules/*" \
             --exclude="tests/*" \
             --exclude="src/index.js" \
+            --exclude="src/admin.js" \
             --exclude="src/edit.js" \
             --exclude="src/index.css" \
+            --exclude="src/admin.css" \
             --exclude="src/block.json" \
             --exclude="phpunit.xml" \
             --exclude="package.json" \

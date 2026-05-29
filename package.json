@@ -5,9 +5,9 @@
     "license": "GPL-3.0-or-later",
     "private": true,
     "scripts": {
-        "build": "wp-scripts build",
-        "start": "wp-scripts start",
-        "lint:js": "wp-scripts lint-js"
+        "build": "wp-scripts build src/assets/admin/admin.js src/assets/blocks/term-thumbnail/index.js",
+        "start": "wp-scripts start src/assets/admin/admin.js src/assets/blocks/term-thumbnail/index.js",
+        "lint:js": "wp-scripts lint-js src/assets/admin/admin.js src/assets/blocks/term-thumbnail/index.js src/assets/blocks/term-thumbnail/edit.js"
     },
     "devDependencies": {
         "@wordpress/icons": "^11.8.0",

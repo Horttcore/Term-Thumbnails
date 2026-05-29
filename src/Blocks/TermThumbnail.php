@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace RalfHortt\TermThumbnails;
+namespace RalfHortt\TermThumbnails\Blocks;
 
-final class Block
+final class TermThumbnail
 {
     public function register(): void
     {
         register_block_type(
-            plugin_dir_path(__FILE__) . '../block.json',
+            plugin_dir_path(__FILE__) . '../../block.json',
             [
                 'render_callback' => [$this, 'render'],
             ],
