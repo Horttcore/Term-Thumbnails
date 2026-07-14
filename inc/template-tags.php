@@ -15,7 +15,7 @@ if (! function_exists('add_action')) {
  */
 function get_term_thumbnail_id(int $term_id = 0): int|false
 {
-    $thumbnail_id = get_term_meta($term_id, '_thumbnail_id', true);
+    $thumbnail_id = get_term_meta($term_id, 'term_thumbnail_id', true);
 
     return $thumbnail_id ? (int) $thumbnail_id : false;
 }

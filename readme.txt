@@ -9,7 +9,8 @@ Stable tag: 3.0.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Post Thumbnails for WordPress Terms.
+Post Thumbnails for WordPress Terms. The selected attachment is exposed as
+the `term_thumbnail_id` REST term meta field.
 
 == Description ==
 
@@ -29,7 +30,8 @@ The block can be placed in block-theme templates or inside a Query Loop block. I
 * **Image size** — choose any registered image size
 * **Aspect ratio** — Original, 1:1, 4:3, 3:4, 3:2, 2:3, 16:9, 9:16
 * **Scale** — Cover, Contain, Fill (shown when an aspect ratio is set)
-* **Focal point** — drag-to-set crop focus (shown when scale is Cover or Fill)
+* **Link to term** — optionally link the image to the current term archive
+* **Dimensions, border, spacing, shadow, and duotone** — provided by block supports
 
 == Template Tags ==
 
@@ -37,6 +39,9 @@ The block can be placed in block-theme templates or inside a Query Loop block. I
 * `has_term_thumbnail( $term_id )` — returns bool
 * `the_term_thumbnail( $size, $attr )` — echoes the thumbnail for the current term archive
 * `get_term_thumbnail( $term_id, $size, $attr )` — returns the `<img>` HTML
+
+Existing `_thumbnail_id` values are migrated once to `term_thumbnail_id`.
+New reads and writes use only `term_thumbnail_id`.
 
 == Hooks ==
 

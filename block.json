@@ -9,6 +9,10 @@
 	"keywords": [ "term", "taxonomy", "thumbnail", "image", "featured" ],
 	"textdomain": "term-thumbnails",
 	"attributes": {
+		"isLink": {
+			"type": "boolean",
+			"default": false
+		},
 		"aspectRatio": {
 			"type": "string"
 		},
@@ -26,26 +30,49 @@
 			"type": "string",
 			"default": "post-thumbnail"
 		},
-		"focalPoint": {
-			"type": "object"
+		"rel": {
+			"type": "string",
+			"default": ""
+		},
+		"linkTarget": {
+			"type": "string",
+			"default": "_self"
 		}
 	},
 	"usesContext": [ "taxonomy", "termId" ],
 	"supports": {
-		"align": [ "wide", "full" ],
+		"anchor": true,
+		"align": [ "left", "right", "center", "wide", "full" ],
+		"color": {
+			"text": false,
+			"background": false
+		},
 		"html": false,
-		"border": {
-			"color": true,
+		"dimensions": {
+			"aspectRatio": true,
 			"width": true,
-			"style": true,
-			"radius": true
+			"height": true
 		},
 		"spacing": {
 			"margin": true,
 			"padding": true
 		},
 		"__experimentalBorder": {
-			"radius": true
+			"color": true,
+			"radius": true,
+			"width": true
+		},
+		"filter": {
+			"duotone": true
+		},
+		"shadow": true
+	},
+	"selectors": {
+		"dimensions": ".wp-block-term-thumbnails-term-thumbnail img, .wp-block-term-thumbnails-term-thumbnail .block-editor-media-placeholder",
+		"border": ".wp-block-term-thumbnails-term-thumbnail img, .wp-block-term-thumbnails-term-thumbnail .block-editor-media-placeholder",
+		"shadow": ".wp-block-term-thumbnails-term-thumbnail img, .wp-block-term-thumbnails-term-thumbnail .components-placeholder",
+		"filter": {
+			"duotone": ".wp-block-term-thumbnails-term-thumbnail img, .wp-block-term-thumbnails-term-thumbnail .block-editor-media-placeholder, .wp-block-term-thumbnails-term-thumbnail .components-placeholder"
 		}
 	},
 	"editorScript": "file:./build/index.js",

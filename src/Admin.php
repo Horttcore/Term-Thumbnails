@@ -2,60 +2,31 @@
 
 declare(strict_types=1);
 
-namespace RalfHortt\TermThumbnails\Admin;
-
-use RalfHortt\TermThumbnails\Taxonomies\Taxonomies;
+namespace RalfHortt\TermThumbnails;
 
 final class Admin
 {
-    private const NONCE_ACTION  = 'term_thumbnail_save';
-    private const NONCE_FIELD   = 'term_thumbnail_nonce';
-    private const META_KEY      = '_thumbnail_id';
-    private const SCRIPT_HANDLE = 'term-thumbnails-admin';
-
-    public function enqueueScriptsForScreen(string $hookSuffix): void
-    {
-        if (! in_array($hookSuffix, ['edit-tags.php', 'term.php'], true)) {
-            return;
-        }
-
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $taxonomySlug = isset($_GET['taxonomy'])
-            ? sanitize_key((string) wp_unslash($_GET['taxonomy']))
-            : '';
-
-        if (
-            $taxonomySlug === ''
-            || ! Taxonomies::supportsThumbnails($taxonomySlug)
-        ) {
-            return;
-        }
-
-        $this->enqueueScripts();
-    }
+    private const NONCE_ACTION = 'term_thumbnail_save';
+    private const NONCE_FIELD  = 'term_thumbnail_nonce';
+    private const META_KEY     = MetaRegistration::META_KEY;
+    private const SCRIPT_HANDLE = 'term-thumbnails';
 
     public function enqueueScripts(): void
     {
-        wp_enqueue_media();
-
-        $assetFile = plugin_dir_path(__FILE__) . '../../build/admin.asset.php';
+        $assetFile = plugin_dir_path(__FILE__) . '../build/index.asset.php';
 
         if (file_exists($assetFile)) {
             $asset = require $assetFile;
         } else {
             $asset = [
-                'dependencies' => [
-                    'media-editor',
-                    'wp-api-fetch',
-                    'wp-dom-ready',
-                ],
-                'version' => '3.0.0',
+                'dependencies' => ['wp-api-fetch', 'wp-dom-ready'],
+                'version'      => '3.0.0',
             ];
         }
 
         wp_register_script(
             self::SCRIPT_HANDLE,
-            plugins_url('../../build/admin.js', __FILE__),
+            plugins_url('../build/index.js', __FILE__),
             $asset['dependencies'],
             $asset['version'],
             true,
@@ -63,7 +34,7 @@ final class Admin
 
         wp_register_style(
             self::SCRIPT_HANDLE,
-            plugins_url('../../build/admin.css', __FILE__),
+            plugins_url('../build/index.css', __FILE__),
             [],
             $asset['version'],
         );
@@ -71,20 +42,13 @@ final class Admin
         wp_enqueue_script(self::SCRIPT_HANDLE);
         wp_enqueue_style(self::SCRIPT_HANDLE);
 
+        // Pass taxonomy slug → REST base map so JS can build correct REST paths.
+        // e.g. 'category' → 'categories', 'post_tag' → 'tags'.
         $restBases = [];
-
-        foreach (Taxonomies::getSlugs() as $slug) {
-            if (! Taxonomies::supportsThumbnails($slug)) {
-                continue;
-            }
-
+        foreach ((new MetaRegistration())->getTaxonomies() as $slug) {
             $taxonomyObject = get_taxonomy($slug);
 
-            if (
-                $taxonomyObject
-                && ! empty($taxonomyObject->show_in_rest)
-                && ! empty($taxonomyObject->rest_base)
-            ) {
+            if ($taxonomyObject && ! empty($taxonomyObject->rest_base)) {
                 $restBases[$slug] = $taxonomyObject->rest_base;
             }
         }
@@ -96,11 +60,7 @@ final class Admin
 
     public function registerTaxonomyHooks(): void
     {
-        foreach (Taxonomies::getSlugs() as $taxonomy) {
-            if (! Taxonomies::supportsThumbnails($taxonomy)) {
-                continue;
-            }
-
+        foreach ((new MetaRegistration())->getTaxonomies() as $taxonomy) {
             add_action($taxonomy . '_add_form_fields', [$this, 'renderAddFormField']);
             add_action($taxonomy . '_edit_form_fields', [$this, 'renderEditFormField']);
             add_action('created_' . $taxonomy, [$this, 'saveOnCreate']);
@@ -112,20 +72,22 @@ final class Admin
 
     public function renderAddFormField(): void
     {
+        wp_enqueue_media();
         $taxonomyLabel = $this->getTaxonomyLabel();
         ?>
-        <div class="form-field term-thumbnail-field">
+        <div class="form-field">
             <label for="term-thumbnail"><?php esc_html_e('Thumbnail', 'term-thumbnails'); ?></label>
             <div>
                 <?php wp_nonce_field(self::NONCE_ACTION, self::NONCE_FIELD); ?>
                 <a
-                    class="button remove-term-thumbnail term-thumbnail-btn is-hidden"
+                    class="button remove-term-thumbnail"
                     id="remove-term-thumbnail-new"
                     href="#"
                     data-id-field="#term-thumbnail-id-new"
+                    style="display: none"
                 ><?php printf(esc_html__('Remove %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
                 <a
-                    class="button add-term-thumbnail term-thumbnail-btn"
+                    class="button add-term-thumbnail"
                     href="#"
                     data-id-field="#term-thumbnail-id-new"
                 ><?php printf(esc_html__('Set %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
@@ -137,11 +99,12 @@ final class Admin
 
     public function renderEditFormField(\WP_Term $tag): void
     {
+        wp_enqueue_media();
         $termId        = $tag->term_id;
         $taxonomyLabel = $this->getTaxonomyLabel();
         $hasThumbnail  = has_term_thumbnail($termId);
         ?>
-        <tr class="form-field term-thumbnail-field">
+        <tr class="form-field">
             <th scope="row">
                 <label for="term-thumbnail"><?php esc_html_e('Thumbnail', 'term-thumbnails'); ?></label>
             </th>
@@ -154,16 +117,22 @@ final class Admin
                 <?php endif; ?>
 
                 <a
-                    class="button remove-term-thumbnail term-thumbnail-btn<?php echo $hasThumbnail ? '' : ' is-hidden'; ?>"
+                    class="button remove-term-thumbnail"
                     id="remove-term-thumbnail-<?php echo esc_attr((string) $termId); ?>"
                     href="#"
                     data-id-field="#term-thumbnail-id-<?php echo esc_attr((string) $termId); ?>"
+                    <?php if (! $hasThumbnail) {
+                        echo 'style="display: none"';
+                    } ?>
                 ><?php printf(esc_html__('Remove %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
 
                 <a
-                    class="button add-term-thumbnail term-thumbnail-btn<?php echo $hasThumbnail ? ' is-hidden' : ''; ?>"
+                    class="button add-term-thumbnail"
                     href="#"
                     data-id-field="#term-thumbnail-id-<?php echo esc_attr((string) $termId); ?>"
+                    <?php if ($hasThumbnail) {
+                        echo 'style="display: none"';
+                    } ?>
                 ><?php printf(esc_html__('Set %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
 
                 <input
@@ -179,14 +148,14 @@ final class Admin
 
     public function addThumbnailColumn(array $columns): array
     {
-        $columns['term-thumbnail'] = esc_html__('Thumbnail', 'term-thumbnails');
+        $columns['thumbnail'] = esc_html__('Thumbnail', 'term-thumbnails');
 
         return $columns;
     }
 
     public function renderThumbnailColumn(string $content, string $columnName, int $termId): string
     {
-        if ('term-thumbnail' !== $columnName) {
+        if ('thumbnail' !== $columnName) {
             return $content;
         }
 
@@ -194,22 +163,24 @@ final class Admin
         $hasThumbnail  = has_term_thumbnail($termId);
 
         ob_start();
+        echo get_term_thumbnail($termId, 'thumbnail', ['class' => 'term-thumbnail']);
         ?>
-        <div class="term-thumbnail-field">
-            <?= get_term_thumbnail($termId, 'thumbnail', ['class' => 'term-thumbnail']) ?>
-            <p>
-                <a
-                    class="button remove-term-thumbnail term-thumbnail-btn<?php echo $hasThumbnail ? '' : ' is-hidden'; ?>"
-                    href="#"
-                    data-term-id="<?php echo esc_attr((string) $termId); ?>"
-                ><?php printf(esc_html__('Remove image'), esc_html($taxonomyLabel)); ?></a>
-                <a
-                    class="button add-term-thumbnail term-thumbnail-btn<?php echo $hasThumbnail ? ' is-hidden' : ''; ?>"
-                    href="#"
-                    data-term-id="<?php echo esc_attr((string) $termId); ?>"
-                ><?php printf(esc_html__('Set image'), esc_html($taxonomyLabel)); ?></a>
-            </p>
-        </div>
+        <a
+            class="button remove-term-thumbnail"
+            href="#"
+            data-term-id="<?php echo esc_attr((string) $termId); ?>"
+            <?php if (! $hasThumbnail) {
+                echo 'style="display: none"';
+            } ?>
+        ><?php printf(esc_html__('Remove %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
+        <a
+            class="button add-term-thumbnail"
+            href="#"
+            data-term-id="<?php echo esc_attr((string) $termId); ?>"
+            <?php if ($hasThumbnail) {
+                echo 'style="display: none"';
+            } ?>
+        ><?php printf(esc_html__('Set %s image', 'term-thumbnails'), esc_html($taxonomyLabel)); ?></a>
         <?php
 
         return ob_get_clean() ?: '';
@@ -217,7 +188,7 @@ final class Admin
 
     public function saveOnCreate(int $termId): void
     {
-        if (! $this->verifyNonce() || ! $this->canEditTerm($termId)) {
+        if (! $this->verifyNonce()) {
             return;
         }
 
@@ -232,7 +203,7 @@ final class Admin
 
     public function saveOnEdit(int $termId): void
     {
-        if (! $this->verifyNonce() || ! $this->canEditTerm($termId)) {
+        if (! $this->verifyNonce()) {
             return;
         }
 
@@ -256,7 +227,12 @@ final class Admin
 
     private function setThumbnail(int $termId, int $attachmentId): void
     {
-        if ($termId === 0 || $attachmentId === 0) {
+        if (
+            $termId === 0
+            || $attachmentId === 0
+            || ! wp_attachment_is_image($attachmentId)
+            || ! current_user_can('edit_term', $termId)
+        ) {
             return;
         }
 
@@ -270,11 +246,6 @@ final class Admin
         }
 
         delete_term_meta($termId, self::META_KEY);
-    }
-
-    private function canEditTerm(int $termId): bool
-    {
-        return $termId > 0 && current_user_can('edit_term', $termId);
     }
 
     private function verifyNonce(): bool

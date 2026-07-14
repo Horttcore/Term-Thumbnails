@@ -11,7 +11,7 @@ use Brain\Monkey\Functions;
 it('returns the attachment id as int when term meta is set', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(42, '_thumbnail_id', true)
+        ->with(42, 'term_thumbnail_id', true)
         ->andReturn('99');
 
     require_once __DIR__ . '/../../inc/template-tags.php';
@@ -22,7 +22,7 @@ it('returns the attachment id as int when term meta is set', function (): void {
 it('returns false when term meta is empty', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(0, '_thumbnail_id', true)
+        ->with(0, 'term_thumbnail_id', true)
         ->andReturn('');
 
     expect(get_term_thumbnail_id(0))->toBeFalse();
@@ -35,7 +35,7 @@ it('returns false when term meta is empty', function (): void {
 it('returns true when the term has a thumbnail', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(5, '_thumbnail_id', true)
+        ->with(5, 'term_thumbnail_id', true)
         ->andReturn('12');
 
     expect(has_term_thumbnail(5))->toBeTrue();
@@ -44,7 +44,7 @@ it('returns true when the term has a thumbnail', function (): void {
 it('returns false when the term has no thumbnail', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(5, '_thumbnail_id', true)
+        ->with(5, 'term_thumbnail_id', true)
         ->andReturn('');
 
     expect(has_term_thumbnail(5))->toBeFalse();
@@ -57,7 +57,7 @@ it('returns false when the term has no thumbnail', function (): void {
 it('returns an img tag when the term has a thumbnail', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(7, '_thumbnail_id', true)
+        ->with(7, 'term_thumbnail_id', true)
         ->andReturn('33');
 
     // apply_filters is called twice: once for size, once for html.
@@ -77,7 +77,7 @@ it('returns an img tag when the term has a thumbnail', function (): void {
 it('returns an empty string when the term has no thumbnail', function (): void {
     Functions\expect('get_term_meta')
         ->once()
-        ->with(7, '_thumbnail_id', true)
+        ->with(7, 'term_thumbnail_id', true)
         ->andReturn('');
 
     Functions\stubs([

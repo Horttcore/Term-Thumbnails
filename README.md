@@ -2,7 +2,8 @@
 
 [![CI](https://github.com/Horttcore/Term-Thumbnails/actions/workflows/ci.yml/badge.svg)](https://github.com/Horttcore/Term-Thumbnails/actions/workflows/ci.yml)
 
-Post Thumbnails for WordPress Terms.
+Post Thumbnails for WordPress Terms. The selected attachment is exposed as
+the `term_thumbnail_id` REST term meta field.
 
 ## Requirements
 
@@ -21,7 +22,8 @@ The plugin registers a `term-thumbnails/term-thumbnail` block for use in block-t
 - **Image size** — choose any registered image size
 - **Aspect ratio** — Original, 1:1, 4:3, 3:4, 3:2, 2:3, 16:9, 9:16
 - **Scale** — Cover, Contain, Fill (shown when an aspect ratio is set)
-- **Focal point** — drag-to-set crop focus (shown when scale is Cover or Fill)
+- **Link to term** — optionally link the image to the current term archive
+- **Dimensions, border, spacing, shadow, and duotone** — provided by block supports
 
 ## Template Tags
 
@@ -31,6 +33,9 @@ has_term_thumbnail( int $term_id ): bool
 the_term_thumbnail( string|array $size = 'post-thumbnail', string|array $attr = '' ): void
 get_term_thumbnail( int $term_id, string|array $size = 'post-thumbnail', string|array $attr = '' ): string
 ```
+
+Existing `_thumbnail_id` values are migrated once to `term_thumbnail_id`.
+New reads and writes use only `term_thumbnail_id`.
 
 ## Hooks
 
