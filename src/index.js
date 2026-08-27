@@ -165,6 +165,18 @@ domReady( () => {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Toggle a button rendered with an inline `display: none` by PHP.
+	 *
+	 * @param {HTMLElement|null} element
+	 * @param {boolean}          visible
+	 */
+	function toggleButton( element, visible ) {
+		if ( element ) {
+			element.style.display = visible ? '' : 'none';
+		}
+	}
+
+	/**
 	 * Show the thumbnail preview inside a button's parent container.
 	 *
 	 * Removes any existing preview first to avoid duplicates.
@@ -175,12 +187,11 @@ domReady( () => {
 	function showPreview( container, attachment ) {
 		container.querySelector( '.term-thumbnail' )?.remove();
 		container.prepend( buildThumbElement( attachment ) );
-		container
-			.querySelector( '.add-term-thumbnail' )
-			?.classList.add( 'hidden' );
-		container
-			.querySelector( '.remove-term-thumbnail' )
-			?.classList.remove( 'hidden' );
+		toggleButton( container.querySelector( '.add-term-thumbnail' ), false );
+		toggleButton(
+			container.querySelector( '.remove-term-thumbnail' ),
+			true
+		);
 	}
 
 	/**
@@ -190,12 +201,11 @@ domReady( () => {
 	 */
 	function clearPreview( container ) {
 		container.querySelector( '.term-thumbnail' )?.remove();
-		container
-			.querySelector( '.add-term-thumbnail' )
-			?.classList.remove( 'hidden' );
-		container
-			.querySelector( '.remove-term-thumbnail' )
-			?.classList.add( 'hidden' );
+		toggleButton( container.querySelector( '.add-term-thumbnail' ), true );
+		toggleButton(
+			container.querySelector( '.remove-term-thumbnail' ),
+			false
+		);
 	}
 
 	// -------------------------------------------------------------------------

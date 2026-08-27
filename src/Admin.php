@@ -164,6 +164,9 @@ final class Admin
 
         ob_start();
         echo get_term_thumbnail($termId, 'thumbnail', ['class' => 'term-thumbnail']);
+        if ($hasThumbnail) {
+            echo '<br>';
+        }
         ?>
         <a
             class="button remove-term-thumbnail"

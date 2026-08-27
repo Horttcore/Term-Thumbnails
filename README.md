@@ -74,7 +74,11 @@ add_filter( 'term-thumbnail-taxonomies', fn() => [ 'genre' ] );
 
 ## Changelog
 
-### v3.0.0
+### v4.0.1
+
+- fix: state handling
+
+### v4.0.0
 
 - Complete rewrite: PSR-4 namespaced PHP 8.4 architecture
 - Replaced jQuery admin JS with vanilla JS + `@wordpress/api-fetch`
